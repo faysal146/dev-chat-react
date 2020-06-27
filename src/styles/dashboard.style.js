@@ -115,3 +115,30 @@ export const UserMessage = styled.div`
     border-bottom: 1px solid var(--bg-dark-light-hover);
     padding-bottom: 8px;
 `;
+
+export const ListItemContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const UserStatusDot = styled.span`
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: ${(props) =>
+        props.status === 'online' ? '#4dd65e' : '#f98208'};
+`;
+
+export const NotificationsLabel = styled.span`
+    width: 20px;
+    height: 20px;
+    background: #f98208;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+    border-radius: 2px;
+    display: inline-block;
+    margin-right: 10px;
+`;

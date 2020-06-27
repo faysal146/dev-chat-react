@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import {useParams} from 'react-router-dom'
 import EmojiPicker from './EmojiPicker'
 import {
     MessageFormContainer,
@@ -15,13 +16,12 @@ import { userSelector } from '@/app/store/selectors/user.selector';
 import UploadImageItem from './UploadImageItem'
 import {uploadImages} from '@/firebase/controller'
 
-
-
 const inputRef = React.createRef()
 const uuid = () => Math.random().toString(36).substr(2)
 
-const MessageForm = ({ channel }) => {
+const MessageForm = () => {
 	const [files, setFiles] = useState([]);
+    const { id: channelId} = useParams()
     const [messageSubmiting, setMessageSubmiting] = useState(false);
     const [showEmoji,setShowEmoji] = useState(false)
     const [message, setMessage] = useState('');
@@ -66,7 +66,7 @@ const MessageForm = ({ channel }) => {
 
   	const sendMessage = useCallback(async (urls) => {
   		try {
-            await createMessage(channel.id, {
+            await createMessage(channelId, {
 				message,
 				images: Array.isArray(urls) ? urls : null,
                 user: {
@@ -82,7 +82,7 @@ const MessageForm = ({ channel }) => {
             setMessageSubmiting(false);
             Alert.error(err.message, 2000);
         }
-  	}, [channel.id,user, message])
+  	}, [channelId,user, message])
 
     useEffect(() => {
     	files.forEach(file => URL.revokeObjectURL(file.preview));
@@ -110,7 +110,7 @@ const MessageForm = ({ channel }) => {
             		setMessageSubmiting(true)
             		const imageUrls = []
             		files.forEach((file,index) => {
-	            		const uploadProcessData = uploadImages(`public/${channel.id}/${uuid()}.${file.file.type.split('/')[1]}`, file.file)
+	            		const uploadProcessData = uploadImages(`public/${channelId}/${uuid()}.${file.file.type.split('/')[1]}`, file.file)
 	            		uploadProcessData((data) => {
 	            			setFiles(state => {
 	            				return state.map((fi,ind) => {

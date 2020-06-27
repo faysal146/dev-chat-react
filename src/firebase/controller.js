@@ -9,20 +9,27 @@ export const signupFirebase = async ({ email, password, name, avatar }) => {
         );
         await authUser.user.updateProfile({
             displayName: name,
-            photoURL: avatar
+            photoURL: avatar,
         });
+        await db
+            .collection('users')
+            .doc(authUser.user.uid)
+            .set({
+                id: authUser.user.uid,
+                email,
+                name,
+                avatar
+            });
+
         return authUser;
     } catch (err) {
-        console.log(err)
-        throw err
+        console.log(err);
+        throw err;
     }
 };
 
 export const signinFirebase = ({ email, password }) => {
-    return firebaseAuth.signInWithEmailAndPassword(
-        email,
-        password
-    );
+    return firebaseAuth.signInWithEmailAndPassword(email, password);
 };
 
 export const createChannel = ({ data, creator }) => {
@@ -37,7 +44,7 @@ export const createChannel = ({ data, creator }) => {
 export const checkIsAuthenticated = () => {
     return new Promise((resolve, reject) => {
         const unregister = firebaseAuth.onAuthStateChanged((user) => {
-            unregister()
+            unregister();
             if (user)
                 resolve({
                     name: user.displayName,
@@ -86,7 +93,7 @@ export const uploadImages = (path, file) => (callBack) => {
         },
         (err) => {
             callBack({
-                progress:0,
+                progress: 0,
                 pause: uploadTask.pause,
                 resume: uploadTask.resume,
                 cancle: uploadTask.cancel,
@@ -111,10 +118,22 @@ export const uploadImages = (path, file) => (callBack) => {
             uploadTask.snapshot.ref
                 .getDownloadURL()
                 .then(function (downloadURL) {
-                    callBack({status: 'success', progress: 100, url: downloadURL });
-                }).catch(err => {
-                    console.log(err)
+                    callBack({
+                        status: 'success',
+                        progress: 100,
+                        url: downloadURL,
+                    });
                 })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     );
+};
+
+export const subscribeMessages = (channelId) => (callBack) => {
+    return db
+        .collection(`messages/${channelId}/chats`)
+        .orderBy('created_at')
+        .onSnapshot((docSnapshot) => callBack(docSnapshot));
 };

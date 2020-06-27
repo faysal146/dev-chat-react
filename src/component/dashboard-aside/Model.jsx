@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { firebaseAuth } from '@/firebase/firebase';
 import {
     Modal,
     Button,
@@ -13,10 +12,10 @@ import {
 import { createChannel } from '@/firebase/controller';
 
 const model = Schema.Model({
-    channel: Schema.Types.StringType().isRequired('Channel Name Reqired'),
+    name: Schema.Types.StringType().isRequired('Channel Name Reqired'),
 });
 
-const init = { channel: '', descriptions: '' };
+const init = { name: '', descriptions: '' };
 
 export default ({ show, toggleModel, user }) => {
     const [loading, setLoading] = useState(false);
@@ -65,7 +64,7 @@ export default ({ show, toggleModel, user }) => {
                     <FormGroup>
                         <ControlLabel>Channel Name</ControlLabel>
                         <FormControl
-                            name='channel'
+                            name='name'
                             size='lg'
                             className='mt-2'
                         />

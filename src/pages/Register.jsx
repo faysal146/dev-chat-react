@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {signUpUser} from '@/app/store/reducers/user.reducer';
-import {errorMessage} from '@/firebase/utils'
+import { signUpUser } from '@/app/store/reducers/user.reducer';
+import { errorMessage } from '@/firebase/utils';
 import {
     Form,
     FormGroup,
@@ -43,7 +43,7 @@ export const RegisterPage = (props) => {
         password: '',
         confirmPassword: '',
     });
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     return (
@@ -58,17 +58,18 @@ export const RegisterPage = (props) => {
                     onSubmit={(isNotError) => {
                         if (isNotError) {
                             setLoading(true);
-                                dispatch(signUpUser({...value}))
-                                .then(res => {
-                                    console.log(res)
-                                    if(res.error) {
-                                        console.log(res.error)
-                                        setLoading(false);
-                                        Alert.error(errorMessage(res.error.code), 5000);
-                                    } else {
-                                        history.replace('/')
-                                    }
-                                })
+                            dispatch(signUpUser({ ...value })).then((res) => {
+                                if (res.error) {
+                                    console.log(res.error);
+                                    setLoading(false);
+                                    Alert.error(
+                                        errorMessage(res.error.code),
+                                        5000
+                                    );
+                                } else {
+                                    history.replace('/');
+                                }
+                            });
                         }
                     }}
                 >

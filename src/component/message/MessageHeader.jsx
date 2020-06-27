@@ -2,8 +2,16 @@ import React from 'react';
 import { FlexboxGrid, Icon } from 'rsuite';
 import { IconWithSize } from '@/styles/custom.style';
 import { MessageInputGroup } from '@/styles/dashboard.style';
+import styled from 'styled-components';
 
-const MessageHeader = ({ channel }) => {
+const Button = styled.button`
+    &:focus,
+    &:active {
+        outline: none;
+    }
+`;
+
+const MessageHeader = ({ channel, handleSearch, handleMarkStarted }) => {
     return (
         <FlexboxGrid
             align='middle'
@@ -11,15 +19,23 @@ const MessageHeader = ({ channel }) => {
             className='py-2 px-4 rounded'
         >
             <FlexboxGrid.Item colspan={12}>
-                <h3>
-                    {channel.channel}{' '}
-                    <IconWithSize icon='star-o' className='size-10' />
+                <h3 className='size-4'>
+                    {channel.name}{' '}
+                    <Button
+                        onClick={handleMarkStarted}
+                        className='bg-transparent'
+                    >
+                        {channel.started ? (
+                            <Icon icon='star' />
+                        ) : (
+                            <IconWithSize
+                                icon='star-o'
+                                className='size-10'
+                                color='green'
+                            />
+                        )}
+                    </Button>
                 </h3>
-                <span className='mt-2'>
-                    <IconWithSize icon='peoples' className='size-10' />
-                    <span className='ml-2'>2</span>
-                </span>
-                {/*<Icon icon="star" />*/}
             </FlexboxGrid.Item>
             <FlexboxGrid.Item colspan={12}>
                 <MessageInputGroup className='flex-grow-1 rounded'>
@@ -33,6 +49,7 @@ const MessageHeader = ({ channel }) => {
                         style={{ paddingLeft: '30px' }}
                         type='text'
                         placeholder='Search Meassage...'
+                        onInput={(e) => handleSearch(e.target.value)}
                     />
                 </MessageInputGroup>
             </FlexboxGrid.Item>
